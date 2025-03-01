@@ -1,4 +1,3 @@
-import pytest
 import allure
 from api_helpers import login_courier
 from data import Response
