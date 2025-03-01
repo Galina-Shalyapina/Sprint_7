@@ -1,4 +1,3 @@
-import requests
 import random
 import string
 import allure
@@ -17,6 +16,13 @@ VALID_ORDER = {
     "color": [],
 }
 
+class Response:
+    SUCCESS_RESPONSE = {"ok": True}
+    DUPLICATE_COURIER = {"code": 409, "message": "Этот логин уже используется"}
+    WRONG_LOGIN_OR_PASSWORD = {"code": 404, "message": "Учетная запись не найдена"}
+    MISSING_PARAM = {"code": 400, "message": "Недостаточно данных для поиска"}
+    MISSING_CREATE_COURIER_FIELD = {"code": 400, "message": "Недостаточно данных для создания учетной записи"}
+    MISSING_DELETE_COURIER_FIELD = {"code": 400, "message":  "Недостаточно данных для удаления курьера"}
 
 def get_courier_data():
     def generate_random_string(length):

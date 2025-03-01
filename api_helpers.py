@@ -20,5 +20,8 @@ def delete_courier(courier_id):
 def accept_order(order_id, courier_id):
     return requests.put(f"{BASE_URL}/api/v1/orders/accept/{order_id}?courierId={courier_id}")
 
+def cancel_order(track_number):
+    return requests.put(f"{BASE_URL}/api/v1/orders/cancel?track={track_number}")
+
 def get_order_by_number(track_number):
     return requests.get(f"{BASE_URL}/api/v1/orders/track?t={track_number}")

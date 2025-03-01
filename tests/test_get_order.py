@@ -1,6 +1,7 @@
 import allure
 from api_helpers import create_order, get_order_by_number
-from data import VALID_ORDER
+from data import VALID_ORDER, Response
+
 
 class TestGetOrder:
     @allure.title("Успешное получение заказа по номеру")
@@ -21,3 +22,5 @@ class TestGetOrder:
             response = get_order_by_number("")
         with allure.step("Проверка кода ответа"):
             assert response.status_code == 400
+        with allure.step("Проверка тела ответа"):
+            assert response.json() == Response.MISSING_PARAM

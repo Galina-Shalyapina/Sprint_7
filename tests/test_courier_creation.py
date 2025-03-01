@@ -1,7 +1,11 @@
 import pytest
 import allure
 from api_helpers import create_courier
-from data import register_new_courier_and_return_login_password, get_courier_data
+from data import (
+    register_new_courier_and_return_login_password,
+    get_courier_data,
+    Response
+)
 
 
 class TestCourierCreation:
@@ -27,12 +31,16 @@ class TestCourierCreation:
             payload = {
                 "login": first_courier["login"],
                 "password": first_courier["password"],
-                "firstName": first_courier["first_name"]
+                "firstName": first_courier["first_name"],
             }
             response = create_courier(payload)
 
         with allure.step("Проверка кода ответа"):
-            assert response.status_code == 409, f"Ожидался код 409, получен {response.status_code}"
+            assert (
+                response.status_code == 409
+            ), f"Ожидался код 409, получен {response.status_code}"
+        with allure.step("Проверка тела ответа"):
+            assert response.json() == Response.DUPLICATE_COURIER
 
     @pytest.mark.parametrize("missing_field", ["login", "password"])
     @allure.title("Ошибка при отсутствии обязательного поля")
@@ -44,4 +52,9 @@ class TestCourierCreation:
             response = create_courier(incomplete_data)
 
         with allure.step("Проверка кода ответа"):
-            assert response.status_code == 400, f"Ожидался код 400, получен {response.status_code}"
+            assert (
+                response.status_code == 400
+            ), f"Ожидался код 400, получен {response.status_code}"
+
+        with allure.step("Проверка тела ответа"):
+            assert response.json() == Response.MISSING_CREATE_COURIER_FIELD

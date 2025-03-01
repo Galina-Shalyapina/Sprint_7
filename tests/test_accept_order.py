@@ -1,6 +1,7 @@
 import allure
 from api_helpers import create_order, accept_order, get_order_by_number
-from data import VALID_ORDER
+from data import VALID_ORDER, Response
+
 
 class TestAcceptOrder:
     @allure.title("Успешное принятие заказа")
@@ -16,7 +17,7 @@ class TestAcceptOrder:
         with allure.step("Проверка кода ответа"):
             assert response.status_code == 200
         with allure.step("Проверка тела ответа"):
-            assert response.json() == {"ok": True}
+            assert response.json() == Response.SUCCESS_RESPONSE
 
     @allure.title("Ошибка при отсутствии courierId")
     def test_accept_order_no_courier_id(self):
@@ -24,3 +25,5 @@ class TestAcceptOrder:
             response = accept_order("1", "")  # Пустой courierId
         with allure.step("Проверка кода ответа"):
             assert response.status_code == 400
+        with allure.step("Проверка тела ответа"):
+            assert response.json() == Response.MISSING_PARAM

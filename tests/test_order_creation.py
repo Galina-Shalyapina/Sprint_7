@@ -1,7 +1,7 @@
 import pytest
 import allure
-from api_helpers import create_order
-from data import VALID_ORDER
+from api_helpers import create_order, cancel_order
+from data import VALID_ORDER, Response
 
 
 class TestOrderCreation:
@@ -11,8 +11,12 @@ class TestOrderCreation:
         order_data = VALID_ORDER.copy()
         order_data["color"] = color
         with allure.step(f"Отправка запроса на создание заказа с цветом: {color}"):
-            response = create_order(order_data)
+            order_create_response = create_order(order_data)
         with allure.step("Проверка кода ответа"):
-            assert response.status_code == 201
+            assert order_create_response.status_code == 201
         with allure.step("Проверка наличия track в ответе"):
-            assert "track" in response.json()
+            assert "track" in order_create_response.json()
+        with allure.step("Отменяем созданный заказ"):
+            track_number = order_create_response.json()["track"]
+            cancel_response = cancel_order(track_number)
+            assert cancel_response.json() == Response.SUCCESS_RESPONSE
